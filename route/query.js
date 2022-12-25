@@ -29,26 +29,19 @@ router.post("/new-movie", async (req, res) => {
     const genres = mysql.escape(req.body.genres);
     const averageRating = mysql.escape(req.body.averageRating);
     const numVotes = mysql.escape(req.body.numVotes);
-    let checkTconst = `SELECT tconst FROM movies WHERE tconst = ?`;
 
-    connection.query(checkTconst, [tconst], (error, results, fields) => {
+    const sql = `
+      INSERT INTO movies (tconst, titleType, primaryTitle, runtimeMinutes, genres) 
+      VALUES (${tconst}, ${titleType}, ${primaryTitle}, ${runtimeMinutes}, ${genres});
+      INSERT INTO ratings (tconst, averageRating, numVotes) 
+      SELECT ${tconst}, ${averageRating}, ${numVotes} FROM DUAL
+      WHERE NOT EXISTS (SELECT 1 FROM ratings WHERE tconst = ${tconst});
+    `;
+    // Execute the INSERT statement
+    connection.query(sql, function (error, results, fields) {
       if (error) {
         console.error(error);
       }
-
-      const sql = `INSERT INTO movies (tconst, titleType, primaryTitle, runtimeMinutes, genres) VALUES (${tconst}, ${titleType}, ${primaryTitle}, ${runtimeMinutes}, ${genres})`;
-      const sql2 = `INSERT INTO ratings (tconst, averageRating, numVotes) VALUES (${tconst}, ${averageRating}, ${numVotes})`;
-      // Execute the INSERT statement
-      connection.query(sql, function (error, results, fields) {
-        if (error) {
-          console.error(error);
-        }
-      });
-      connection.query(sql2, function (error, results, fields) {
-        if (error) {
-          console.error(error);
-        }
-      });
     });
 
     res.status(200).json("success");
