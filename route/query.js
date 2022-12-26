@@ -49,42 +49,6 @@ router.post("/new-movie", async (req, res) => {
   }
 });
 
-// router.post("/new-movie", async (req, res) => {
-//   try {
-//     const {
-//       tconst,
-//       titleType,
-//       primaryTitle,
-//       runtimeMinutes,
-//       genres,
-//       averageRating,
-//       numVotes,
-//     } = req.body;
-//     const values = [tconst, titleType, primaryTitle, runtimeMinutes, genres];
-//     const sql = `INSERT INTO movies (tconst, titleType, primaryTitle, runtimeMinutes, genres) VALUES (?, ?, ?, ?, ?)`;
-//     const sql2 = `INSERT INTO ratings (tconst, averageRating, numVotes) VALUES (?, ?, ?)`;
-//     // Execute the INSERT statement
-//     connection.query(sql, values, (error, results) => {
-//       if (error) {
-//         console.error(error);
-//       }
-//     });
-//     connection.query(
-//       sql2,
-//       [tconst, averageRating, numVotes],
-//       (error, results) => {
-//         if (error) {
-//           console.error(error);
-//         }
-//       }
-//     );
-
-//     res.status(200).json("success");
-//   } catch (err) {
-//     res.status(500).json(err);
-//   }
-// });
-
 router.get("/top-rated-movies", async (req, res) => {
   let sql = `SELECT movies.tconst, primaryTitle, genres , averageRating FROM movies INNER JOIN ratings ON movies.tconst=ratings.tconst WHERE averageRating > 6 ORDER BY averageRating`;
   try {
