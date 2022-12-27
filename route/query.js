@@ -6,7 +6,7 @@ let connection = mysql.createConnection(config);
 router.get("/longest-duration-movies", async (req, res) => {
   let sql = `SELECT  tconst, primaryTitle, runtimeMinutes , genres FROM movies ORDER BY runtimeMinutes DESC LIMIT 10`;
   try {
-    connection.query(sql, [true], (error, results, fields) => {
+    await connection.query(sql, [true], (error, results, fields) => {
       if (error) {
         return console.error(error.message);
       }
@@ -31,12 +31,12 @@ router.post("/new-movie", async (req, res) => {
     const sql = `INSERT INTO movies (tconst, titleType, primaryTitle, runtimeMinutes, genres) VALUES (${tconst}, ${titleType}, ${primaryTitle}, ${runtimeMinutes}, ${genres})`;
     const sql2 = `INSERT INTO ratings (tconst, averageRating, numVotes) VALUES (${tconst}, ${averageRating}, ${numVotes})`;
     // Execute the INSERT statement
-    connection.query(sql, function (error, results, fields) {
+    await connection.query(sql, function (error, results, fields) {
       if (error) {
         console.error(error);
       }
     });
-    connection.query(sql2, function (error, results, fields) {
+    await connection.query(sql2, function (error, results, fields) {
       if (error) {
         console.error(error);
       }
@@ -52,7 +52,7 @@ router.post("/new-movie", async (req, res) => {
 router.get("/top-rated-movies", async (req, res) => {
   let sql = `SELECT movies.tconst, primaryTitle, genres , averageRating FROM movies INNER JOIN ratings ON movies.tconst=ratings.tconst WHERE averageRating > 6 ORDER BY averageRating`;
   try {
-    connection.query(sql, [true], (error, results, fields) => {
+    await connection.query(sql, [true], (error, results, fields) => {
       if (error) {
         return console.error(error.message);
       }

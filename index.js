@@ -6,6 +6,6 @@ app.use(cors());
 app.use(express.json());
 app.use("/api/v1", user);
 
-app.listen(process.env.PORT || 5000, "0.0.0.0", () => {
+app.listen(process.env.PORT || 5001, "0.0.0.0", () => {
   console.log("Backend server is running!");
 });
